@@ -8,13 +8,16 @@ GET  /healthz  no token; "ok"
 from __future__ import annotations
 
 import hmac
+import logging
 import threading
 import time
 from collections import deque
 from collections.abc import Callable
 from datetime import datetime, timedelta
 
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from .. import ET
@@ -24,6 +27,8 @@ from ..state import Location, State
 from .matcher import resolve, short_street
 from .nightly_check import Geocoder
 from .schedule import Schedule, next_rule_dates
+
+log = logging.getLogger(__name__)
 
 RATE_LIMIT = 6  # authorised requests per window
 RATE_WINDOW_S = 60.0
@@ -115,6 +120,26 @@ def create_app(
 ) -> FastAPI:
     cfg.require_intake_token()
     app = FastAPI(title="parking-checks intake", docs_url=None, redoc_url=None, openapi_url=None)
+
+    @app.middleware("http")
+    async def log_requests(request: Request, call_next):
+        # One line per request for troubleshooting the Shortcut. Never logs headers or the token.
+        response = await call_next(request)
+        ua = (request.headers.get("user-agent") or "-")[:40]
+        log.info("%s %s -> %s (ua=%s)", request.method, request.url.path, response.status_code, ua)
+        return response
+
+    @app.exception_handler(HTTPException)
+    async def http_error(request: Request, exc: HTTPException):
+        log.warning("rejected %s: %s %s", request.url.path, exc.status_code, exc.detail)
+        return JSONResponse({"detail": exc.detail, "message": f"Not saved: {exc.detail}"}, exc.status_code)
+
+    @app.exception_handler(RequestValidationError)
+    async def validation_error(request: Request, exc: RequestValidationError):
+        problems = [f"{'.'.join(str(x) for x in e.get('loc', ()))}: {e.get('msg')}" for e in exc.errors()]
+        log.warning("rejected %s body: %s", request.url.path, "; ".join(problems))
+        return JSONResponse({"detail": problems, "message": "Not saved: " + "; ".join(problems)}, 422)
+
     limiter = limiter or RateLimiter(RATE_LIMIT, RATE_WINDOW_S)
     # Bad tokens get their own budget, so junk traffic from the public URL cannot lock out
     # the phones.
@@ -163,7 +188,9 @@ def create_app(
             )
         finally:
             state.close()
-        return {"ok": True, "id": loc.id, "message": reply_message(sched, loc, now)}
+        msg = reply_message(sched, loc, now)
+        log.info("saved location %s from %s: %r (%s)", loc.id, loc.device, loc.street_raw, source)
+        return {"ok": True, "id": loc.id, "message": msg}
 
     @app.get("/last", dependencies=[Depends(guard)])
     def last() -> dict[str, object]:

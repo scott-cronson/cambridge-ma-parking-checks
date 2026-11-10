@@ -41,7 +41,8 @@ def auth(cfg):
 
 def test_no_token_then_valid_token(cfg, sched, db):
     c = make_client(cfg, sched, db)
-    assert c.post("/park", json=BODY).status_code == 401
+    r401 = c.post("/park", json=BODY)
+    assert r401.status_code == 401 and r401.json()["message"] == "Not saved: unauthorized"
     assert c.post("/park", json=BODY, headers={"Authorization": "Bearer wrong"}).status_code == 401
     r = c.post("/park", json=BODY, headers=auth(cfg))
     assert r.status_code == 200, r.text
@@ -87,3 +88,9 @@ def test_requires_token_configured(cfg, sched, db):
     cfg.intake_token = "short"
     with pytest.raises(Exception, match="INTAKE_TOKEN"):
         make_client(cfg, sched, db)
+
+
+def test_bad_body_explains_itself(cfg, sched, db):
+    c = make_client(cfg, sched, db)
+    r = c.post("/park", content=b"not json", headers={**auth(cfg), "Content-Type": "application/json"})
+    assert r.status_code == 422 and r.json()["message"].startswith("Not saved:")
