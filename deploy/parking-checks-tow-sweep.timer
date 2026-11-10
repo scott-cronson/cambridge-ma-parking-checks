@@ -1,0 +1,12 @@
+[Unit]
+Description=parking-checks: sample the tow lookup every 3 hours for the latency log
+
+[Timer]
+# The command exits immediately once LATENCY_SAMPLE_DAYS have passed since its first run.
+OnCalendar=*-*-* 00/3:15:00 America/New_York
+Persistent=false
+RandomizedDelaySec=300
+Unit=parking-checks@tow-sweep.service
+
+[Install]
+WantedBy=timers.target

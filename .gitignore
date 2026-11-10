@@ -1,0 +1,16 @@
+.env
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+# Saved lookup pages contain other people's plates. Only scrubbed fixtures in tests/fixtures are committed.
+/saved/
+*.html
+!tests/fixtures/*.html

@@ -1,0 +1,29 @@
+# One-shot check runner: parking-checks@tow-plate.service runs `parking-checks tow-plate`.
+[Unit]
+Description=parking-checks %i
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=parkingbot
+Group=parkingbot
+WorkingDirectory=/opt/cambridge-ma-parking-checks
+Environment=PARKING_CHECKS_ENV=/opt/cambridge-ma-parking-checks/.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/cambridge-ma-parking-checks/.venv/bin/parking-checks %i
+StateDirectory=parking-checks
+StateDirectoryMode=0700
+TimeoutStartSec=15min
+Nice=10
+MemoryMax=200M
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes

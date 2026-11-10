@@ -1,0 +1,2376 @@
+{
+  "meta": {
+    "source": "City of Cambridge street cleaning tool (Recollect service 762), street shapes from OpenStreetMap",
+    "pulled": "2026-11-10",
+    "coverage_note": "Streets within radius_m of a private point. The point is not stored here; set COVERAGE_CENTER_LAT and COVERAGE_CENTER_LON in .env.",
+    "radius_m": 450,
+    "season": {
+      "text": "April 1 to December 31 (no cleaning January to March)",
+      "start_month": 4,
+      "end_month": 12
+    },
+    "move_car_by": "08:00 local time",
+    "fine": "$100 per violation. Cambridge does not tow for street cleaning (it tows for temporary No Parking signs, snow emergencies and unpaid tickets).",
+    "caveats": [
+      "Signs are what get enforced. Check posted signs once.",
+      "Valid only while the city keeps these districts and day rules. Re-verify each April.",
+      "Odd and even refer to odd and even street numbers; the city tool labels each curb side this way.",
+      "Entries with source inferred_from_nearby_addresses were not checked against any address on that street.",
+      "Holiday dates for 2027 and 2028 are computed from standard rules and the observed-day convention the city used in 2026 (Saturday to Friday, Sunday to Monday). They are not published by the city yet."
+    ],
+    "schema_version": 4,
+    "valid_for_years": [
+      2026,
+      2027,
+      2028
+    ]
+  },
+  "how_to_compute": "For each month from April to December, the cleaning date is the nth weekday given by the district rule for that side. No stored dates are needed. If that date is in holidays (date or observed_date), mark the cleaning as a holiday conflict.",
+  "street_aliases": {
+    "_note": "Keys are normalised spellings (abbreviations expanded) that differ from the street names in this file. Matching ignores case.",
+    "Lansdowne Street": "Landsdowne Street",
+    "Mass Avenue": "Massachusetts Avenue",
+    "Mass Ave": "Massachusetts Avenue",
+    "Sidney Street Ext": "Sidney Street Extension",
+    "S William Way": "South William Way",
+    "Bishop Allen Dr": "Bishop Allen Drive"
+  },
+  "holiday_policy": {
+    "summary": "Cleanings that land on a city holiday are moved, not skipped. In 2026 all three conflicts for these districts were moved (Labor Day to the Monday a week earlier, Jul 3 to Tue Jun 30, Indigenous Peoples Day to Tue Sep 29). The new date varies by holiday (3 to 13 days earlier here, and later for some other routes), so it cannot be computed.",
+    "default_behavior": "Treat the rule date as unconfirmed. Alert for the rule date anyway, label it holiday_conflict, and look up the actual date from the city calendar when it is published (usually weeks ahead).",
+    "relocations_observed_2026": [
+      {
+        "district": "B",
+        "side": "odd",
+        "holiday": "Labor Day",
+        "from": "2026-09-07",
+        "to": "2026-08-31"
+      },
+      {
+        "district": "C",
+        "side": "odd",
+        "holiday": "Independence Day (observed)",
+        "from": "2026-07-03",
+        "to": "2026-06-30"
+      },
+      {
+        "district": "C",
+        "side": "even",
+        "holiday": "Indigenous Peoples Day",
+        "from": "2026-10-12",
+        "to": "2026-09-29"
+      }
+    ],
+    "city_published_2026_moves_other_routes": [
+      {
+        "holiday": "Patriots Day",
+        "from": "2026-04-20",
+        "to": "2026-04-29"
+      },
+      {
+        "holiday": "Memorial Day",
+        "from": "2026-05-25",
+        "to": "2026-05-29"
+      },
+      {
+        "holiday": "Juneteenth",
+        "from": "2026-06-19",
+        "to": "2026-06-29"
+      },
+      {
+        "holiday": "Veterans Day",
+        "from": "2026-11-11",
+        "to": "2026-10-29"
+      },
+      {
+        "holiday": "Thanksgiving",
+        "from": "2026-11-26",
+        "to": "2026-11-30"
+      },
+      {
+        "holiday": "Christmas",
+        "from": "2026-12-25",
+        "to": "2026-12-29"
+      }
+    ],
+    "no_change": [
+      "Day after Thanksgiving",
+      "Christmas Eve"
+    ]
+  },
+  "holidays": {
+    "2026": [
+      {
+        "name": "Patriots Day",
+        "date": "2026-04-20",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": true
+      },
+      {
+        "name": "Memorial Day",
+        "date": "2026-05-25",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": true
+      },
+      {
+        "name": "Juneteenth",
+        "date": "2026-06-19",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": true
+      },
+      {
+        "name": "Independence Day",
+        "date": "2026-07-04",
+        "observed_date": "2026-07-03",
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": true,
+        "note": "In 2026 the city used the observed Friday, Jul 3."
+      },
+      {
+        "name": "Labor Day",
+        "date": "2026-09-07",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": true
+      },
+      {
+        "name": "Indigenous Peoples Day",
+        "date": "2026-10-12",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": true
+      },
+      {
+        "name": "Veterans Day",
+        "date": "2026-11-11",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": true
+      },
+      {
+        "name": "Thanksgiving",
+        "date": "2026-11-26",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": true
+      },
+      {
+        "name": "Christmas",
+        "date": "2026-12-25",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": true
+      }
+    ],
+    "2027": [
+      {
+        "name": "Patriots Day",
+        "date": "2027-04-19",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Memorial Day",
+        "date": "2027-05-31",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Juneteenth",
+        "date": "2027-06-19",
+        "observed_date": "2027-06-18",
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Independence Day",
+        "date": "2027-07-04",
+        "observed_date": "2027-07-05",
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false,
+        "note": "In 2026 the city used the observed Friday, Jul 3."
+      },
+      {
+        "name": "Labor Day",
+        "date": "2027-09-06",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Indigenous Peoples Day",
+        "date": "2027-10-11",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Veterans Day",
+        "date": "2027-11-11",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Thanksgiving",
+        "date": "2027-11-25",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Christmas",
+        "date": "2027-12-25",
+        "observed_date": "2027-12-24",
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      }
+    ],
+    "2028": [
+      {
+        "name": "Patriots Day",
+        "date": "2028-04-17",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Memorial Day",
+        "date": "2028-05-29",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Juneteenth",
+        "date": "2028-06-19",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Independence Day",
+        "date": "2028-07-04",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false,
+        "note": "In 2026 the city used the observed Friday, Jul 3."
+      },
+      {
+        "name": "Labor Day",
+        "date": "2028-09-04",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Indigenous Peoples Day",
+        "date": "2028-10-09",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Veterans Day",
+        "date": "2028-11-11",
+        "observed_date": "2028-11-10",
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Thanksgiving",
+        "date": "2028-11-23",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      },
+      {
+        "name": "Christmas",
+        "date": "2028-12-25",
+        "observed_date": null,
+        "city_effect": "cleaning_moved",
+        "dates_verified_with_city": false
+      }
+    ]
+  },
+  "districts": {
+    "B": {
+      "odd_side": {
+        "text": "1st Monday",
+        "nth": 1,
+        "weekday": "Monday",
+        "weekday_iso": 1
+      },
+      "even_side": {
+        "text": "1st Tuesday",
+        "nth": 1,
+        "weekday": "Tuesday",
+        "weekday_iso": 2
+      },
+      "holiday_conflicts": {
+        "odd": [
+          {
+            "rule_date": "2026-09-07",
+            "holiday": "Labor Day",
+            "status": "relocated_confirmed",
+            "actual_date": "2026-08-31",
+            "rule_date_is_observed_holiday": false
+          },
+          {
+            "rule_date": "2027-07-05",
+            "holiday": "Independence Day",
+            "status": "relocated_date_unknown_until_city_publishes",
+            "actual_date": null,
+            "rule_date_is_observed_holiday": true
+          },
+          {
+            "rule_date": "2027-09-06",
+            "holiday": "Labor Day",
+            "status": "relocated_date_unknown_until_city_publishes",
+            "actual_date": null,
+            "rule_date_is_observed_holiday": false
+          },
+          {
+            "rule_date": "2028-09-04",
+            "holiday": "Labor Day",
+            "status": "relocated_date_unknown_until_city_publishes",
+            "actual_date": null,
+            "rule_date_is_observed_holiday": false
+          }
+        ],
+        "even": [
+          {
+            "rule_date": "2028-07-04",
+            "holiday": "Independence Day",
+            "status": "relocated_date_unknown_until_city_publishes",
+            "actual_date": null,
+            "rule_date_is_observed_holiday": false
+          }
+        ]
+      }
+    },
+    "C": {
+      "odd_side": {
+        "text": "1st Friday",
+        "nth": 1,
+        "weekday": "Friday",
+        "weekday_iso": 5
+      },
+      "even_side": {
+        "text": "2nd Monday",
+        "nth": 2,
+        "weekday": "Monday",
+        "weekday_iso": 1
+      },
+      "holiday_conflicts": {
+        "odd": [
+          {
+            "rule_date": "2026-07-03",
+            "holiday": "Independence Day",
+            "status": "relocated_confirmed",
+            "actual_date": "2026-06-30",
+            "rule_date_is_observed_holiday": true
+          }
+        ],
+        "even": [
+          {
+            "rule_date": "2026-10-12",
+            "holiday": "Indigenous Peoples Day",
+            "status": "relocated_confirmed",
+            "actual_date": "2026-09-29",
+            "rule_date_is_observed_holiday": false
+          },
+          {
+            "rule_date": "2027-10-11",
+            "holiday": "Indigenous Peoples Day",
+            "status": "relocated_date_unknown_until_city_publishes",
+            "actual_date": null,
+            "rule_date_is_observed_holiday": false
+          },
+          {
+            "rule_date": "2028-10-09",
+            "holiday": "Indigenous Peoples Day",
+            "status": "relocated_date_unknown_until_city_publishes",
+            "actual_date": null,
+            "rule_date_is_observed_holiday": false
+          }
+        ]
+      }
+    },
+    "E": {
+      "odd_side": {
+        "text": "2nd Thursday",
+        "nth": 2,
+        "weekday": "Thursday",
+        "weekday_iso": 4
+      },
+      "even_side": {
+        "text": "2nd Friday",
+        "nth": 2,
+        "weekday": "Friday",
+        "weekday_iso": 5
+      },
+      "holiday_conflicts": {
+        "odd": [
+          {
+            "rule_date": "2027-11-11",
+            "holiday": "Veterans Day",
+            "status": "relocated_date_unknown_until_city_publishes",
+            "actual_date": null,
+            "rule_date_is_observed_holiday": false
+          }
+        ],
+        "even": [
+          {
+            "rule_date": "2028-11-10",
+            "holiday": "Veterans Day",
+            "status": "relocated_date_unknown_until_city_publishes",
+            "actual_date": null,
+            "rule_date_is_observed_holiday": true
+          }
+        ]
+      }
+    }
+  },
+  "city_calendar_lookup": {
+    "note": "Unofficial endpoint behind the city's street cleaning tool. Returns the actual dates including holiday moves. Query one address per district; events named street_sweeping_odd and street_sweeping_even carry the date in the day field.",
+    "url_template": "https://api.recollect.net/api/places/{place_id}/services/762/events?nomerge=1&hide=reminder_only&after={YYYY-MM-DD}&before={YYYY-MM-DD}&locale=en-US",
+    "reference_places": {
+      "B": {
+        "address": "5 Columbia St",
+        "place_id": "9B3923A4-F5E1-11E9-B929-138FAE1CEA48"
+      },
+      "C": {
+        "address": "45 Pearl St (Central Square library)",
+        "place_id": "D42FBCCA-DAA5-11E8-AA30-DB7ADAB7354B"
+      },
+      "E": {
+        "address": "300 Franklin St",
+        "place_id": "D4DF4330-B0B0-11E8-B82A-FE14F067F81A"
+      }
+    }
+  },
+  "streets": {
+    "Albany Street": {
+      "odd_side": [
+        {
+          "from": 143,
+          "to": 235,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 68,
+          "to": 68,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 120,
+          "to": 250,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Ashburton Place": {
+      "odd_side": [
+        {
+          "from": 3,
+          "to": 5,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 2,
+          "to": 6,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Auburn Street": {
+      "odd_side": [
+        {
+          "from": 107,
+          "to": 199,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 114,
+          "to": 206,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Bishop Allen Drive": {
+      "odd_side": [
+        {
+          "from": 19,
+          "to": 85,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 4,
+          "to": 130,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Blanche Street": {
+      "odd_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "inferred_from_nearby_addresses"
+        },
+        {
+          "from": null,
+          "to": null,
+          "district": null,
+          "schedule": null,
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 4,
+          "to": 4,
+          "district": null,
+          "schedule": null,
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 20,
+          "to": 20,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": true,
+      "note": "City tool lists only numbers 4 (no schedule) and 20. Fully inferred."
+    },
+    "Brookline Place": {
+      "odd_side": [
+        {
+          "from": 1,
+          "to": 3,
+          "district": null,
+          "schedule": null,
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": null,
+          "schedule": null,
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Brookline Street": {
+      "odd_side": [
+        {
+          "from": 5,
+          "to": 171,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 10,
+          "to": 10,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 66,
+          "to": 66,
+          "district": null,
+          "schedule": null,
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 68,
+          "to": 68,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 70,
+          "to": 172,
+          "district": null,
+          "schedule": null,
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false,
+      "note": "Even numbers 66 to 172 returned no schedule from the city tool; odd side is C."
+    },
+    "Cherry Street": {
+      "odd_side": [
+        {
+          "from": 45,
+          "to": 137,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 56,
+          "to": 154,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Columbia Street": {
+      "odd_side": [
+        {
+          "from": 5,
+          "to": 137,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 44,
+          "to": 146,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Columbia Terrace": {
+      "odd_side": [
+        {
+          "from": 3,
+          "to": 9,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 2,
+          "to": 10,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Cottage Court": {
+      "odd_side": [
+        {
+          "from": 1,
+          "to": 5,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 2,
+          "to": 6,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Cottage Street": {
+      "odd_side": [
+        {
+          "from": 9,
+          "to": 37,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 6,
+          "to": 36,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Cross Street": {
+      "odd_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "even_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "has_inferred_segments": true
+    },
+    "Decatur Street": {
+      "odd_side": [
+        {
+          "from": 9,
+          "to": 27,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 20,
+          "to": 32,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Douglass Street": {
+      "odd_side": [
+        {
+          "from": 9,
+          "to": 9,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 8,
+          "to": 12,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Eaton Street": {
+      "odd_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 4,
+          "to": 6,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": true
+    },
+    "Emily Street": {
+      "odd_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": null,
+          "schedule": null,
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 12,
+          "to": 24,
+          "district": null,
+          "schedule": null,
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Essex Street": {
+      "odd_side": [
+        {
+          "from": 25,
+          "to": 43,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 24,
+          "to": 50,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Fiske Place": {
+      "odd_side": [
+        {
+          "from": 23,
+          "to": 23,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 24,
+          "to": 24,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Franklin Street": {
+      "odd_side": [
+        {
+          "from": 129,
+          "to": 255,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 315,
+          "to": 411,
+          "district": "E",
+          "schedule": {
+            "text": "2nd Thursday",
+            "nth": 2,
+            "weekday": "Thursday",
+            "weekday_iso": 4
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 172,
+          "to": 286,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 300,
+          "to": 400,
+          "district": "E",
+          "schedule": {
+            "text": "2nd Friday",
+            "nth": 2,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false,
+      "note": "Parcels 55 and 150 returned no schedule and were ignored. Ranges listed are checked addresses only."
+    },
+    "Front Street": {
+      "odd_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "even_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "has_inferred_segments": true
+    },
+    "Green Street": {
+      "odd_side": [
+        {
+          "from": 11,
+          "to": 291,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 355,
+          "to": 375,
+          "district": "E",
+          "schedule": {
+            "text": "2nd Thursday",
+            "nth": 2,
+            "weekday": "Thursday",
+            "weekday_iso": 4
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 184,
+          "to": 288,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 362,
+          "to": 438,
+          "district": "E",
+          "schedule": {
+            "text": "2nd Friday",
+            "nth": 2,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Harold Place": {
+      "odd_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "even_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "has_inferred_segments": true
+    },
+    "Landsdowne Street": {
+      "odd_side": [
+        {
+          "from": 7,
+          "to": 65,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 26,
+          "to": 100,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Lopez Street": {
+      "odd_side": [
+        {
+          "from": 31,
+          "to": 51,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 8,
+          "to": 48,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Magazine Street": {
+      "odd_side": [
+        {
+          "from": 5,
+          "to": 99,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 10,
+          "to": 108,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Main Street": {
+      "odd_side": [
+        {
+          "from": 781,
+          "to": 907,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 700,
+          "to": 884,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Marvin Place": {
+      "odd_side": [
+        {
+          "from": 7,
+          "to": 7,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 8,
+          "to": 8,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Massachusetts Avenue": {
+      "odd_side": [
+        {
+          "from": 155,
+          "to": 739,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 134,
+          "to": 134,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 180,
+          "to": 292,
+          "district": null,
+          "schedule": null,
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 300,
+          "to": 300,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 310,
+          "to": 350,
+          "district": null,
+          "schedule": null,
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 402,
+          "to": 630,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 678,
+          "to": 750,
+          "district": "E",
+          "schedule": {
+            "text": "2nd Friday",
+            "nth": 2,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false,
+      "note": "Odd and even sides fall in different districts. Even-side N ranges returned no schedule (Central Sq area)."
+    },
+    "Norfolk Place": {
+      "odd_side": [
+        {
+          "from": 1,
+          "to": 3,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 2,
+          "to": 2,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Norfolk Street": {
+      "odd_side": [
+        {
+          "from": 51,
+          "to": 97,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 30,
+          "to": 134,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Norfolk Terrace": {
+      "odd_side": [
+        {
+          "from": 1,
+          "to": 1,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 2,
+          "to": 2,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Pacific Street": {
+      "odd_side": [
+        {
+          "from": 115,
+          "to": 119,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 70,
+          "to": 110,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": true,
+      "note": "City tool has no numbers below 70. South end inferred as C."
+    },
+    "Pearl Street": {
+      "odd_side": [
+        {
+          "from": 15,
+          "to": 231,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 22,
+          "to": 236,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Perry Street": {
+      "odd_side": [
+        {
+          "from": 5,
+          "to": 23,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 6,
+          "to": 18,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Pilgrim Street": {
+      "odd_side": [
+        {
+          "from": 41,
+          "to": 47,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 30,
+          "to": 48,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Pine Street": {
+      "odd_side": [
+        {
+          "from": 1,
+          "to": 143,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 8,
+          "to": 126,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Prospect Street": {
+      "odd_side": [
+        {
+          "from": 19,
+          "to": 45,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 16,
+          "to": 96,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Purrington Street": {
+      "odd_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "even_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "has_inferred_segments": true
+    },
+    "River Street": {
+      "odd_side": [
+        {
+          "from": 25,
+          "to": 55,
+          "district": "E",
+          "schedule": {
+            "text": "2nd Thursday",
+            "nth": 2,
+            "weekday": "Thursday",
+            "weekday_iso": 4
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 26,
+          "to": 34,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 44,
+          "to": 44,
+          "district": "E",
+          "schedule": {
+            "text": "2nd Friday",
+            "nth": 2,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        },
+        {
+          "from": 62,
+          "to": 62,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Rollins Court": {
+      "odd_side": [
+        {
+          "from": 3,
+          "to": 11,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 4,
+          "to": 10,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Salem Street": {
+      "odd_side": [
+        {
+          "from": 11,
+          "to": 11,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 4,
+          "to": 14,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "School Street": {
+      "odd_side": [
+        {
+          "from": 71,
+          "to": 109,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 68,
+          "to": 88,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Sidney Place": {
+      "odd_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "even_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "has_inferred_segments": true
+    },
+    "Sidney Street": {
+      "odd_side": [
+        {
+          "from": 23,
+          "to": 167,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 20,
+          "to": 148,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Sidney Street Extension": {
+      "odd_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "even_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "has_inferred_segments": true
+    },
+    "South William Way": {
+      "odd_side": [
+        {
+          "from": 1,
+          "to": 5,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 4,
+          "to": 4,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "State Street": {
+      "odd_side": [
+        {
+          "from": 1,
+          "to": 19,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "has_inferred_segments": true
+    },
+    "Suffolk Street": {
+      "odd_side": [
+        {
+          "from": 3,
+          "to": 25,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 6,
+          "to": 32,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Tudor Street": {
+      "odd_side": [
+        {
+          "from": 33,
+          "to": 33,
+          "district": null,
+          "schedule": null,
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": null,
+          "schedule": null,
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Valentine Place": {
+      "odd_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "even_side": [
+        {
+          "from": null,
+          "to": null,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "inferred_from_nearby_addresses"
+        }
+      ],
+      "has_inferred_segments": true
+    },
+    "Washington Court": {
+      "odd_side": [
+        {
+          "from": 1,
+          "to": 1,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 2,
+          "to": 2,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Washington Street": {
+      "odd_side": [
+        {
+          "from": 241,
+          "to": 413,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 296,
+          "to": 400,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Watson Street": {
+      "odd_side": [
+        {
+          "from": 15,
+          "to": 27,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 4,
+          "to": 26,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Western Avenue": {
+      "odd_side": [
+        {
+          "from": 5,
+          "to": 179,
+          "district": "E",
+          "schedule": {
+            "text": "2nd Thursday",
+            "nth": 2,
+            "weekday": "Thursday",
+            "weekday_iso": 4
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 44,
+          "to": 168,
+          "district": "E",
+          "schedule": {
+            "text": "2nd Friday",
+            "nth": 2,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "William Street": {
+      "odd_side": [
+        {
+          "from": 3,
+          "to": 41,
+          "district": "C",
+          "schedule": {
+            "text": "1st Friday",
+            "nth": 1,
+            "weekday": "Friday",
+            "weekday_iso": 5
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 2,
+          "to": 46,
+          "district": "C",
+          "schedule": {
+            "text": "2nd Monday",
+            "nth": 2,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    },
+    "Windsor Street": {
+      "odd_side": [
+        {
+          "from": 93,
+          "to": 177,
+          "district": "B",
+          "schedule": {
+            "text": "1st Monday",
+            "nth": 1,
+            "weekday": "Monday",
+            "weekday_iso": 1
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "even_side": [
+        {
+          "from": 170,
+          "to": 170,
+          "district": "B",
+          "schedule": {
+            "text": "1st Tuesday",
+            "nth": 1,
+            "weekday": "Tuesday",
+            "weekday_iso": 2
+          },
+          "source": "city_tool_address_samples"
+        }
+      ],
+      "has_inferred_segments": false
+    }
+  }
+}

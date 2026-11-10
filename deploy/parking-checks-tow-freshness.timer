@@ -1,0 +1,12 @@
+[Unit]
+Description=parking-checks: confirm the tow lookup is live and current
+
+[Timer]
+# install.sh replaces this with FRESHNESS_ON_CALENDAR from .env (default: Wednesdays 7:00 am ET).
+OnCalendar=@FRESHNESS_ON_CALENDAR@
+Persistent=true
+RandomizedDelaySec=60
+Unit=parking-checks@tow-freshness.service
+
+[Install]
+WantedBy=timers.target
