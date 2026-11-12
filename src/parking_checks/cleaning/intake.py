@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .. import ET
 from ..config import Config
@@ -37,6 +37,16 @@ BAD_AUTH_LIMIT = 20
 
 
 class ParkIn(BaseModel):
+    # Keys are matched case-insensitively: the iPhone keyboard likes to capitalize them.
+    model_config = ConfigDict(extra="ignore")
+
+    @model_validator(mode="before")
+    @classmethod
+    def _lower_keys(cls, data: object) -> object:
+        if isinstance(data, dict):
+            return {(k.strip().lower() if isinstance(k, str) else k): v for k, v in data.items()}
+        return data
+
     lat: str | float | None = None
     lon: str | float | None = None
     street: str | None = Field(default=None, max_length=200)
@@ -191,7 +201,14 @@ def create_app(
         return {"status": "ok"}
 
     @app.post("/park")
-    def park(body: ParkIn, authorization: str | None = Header(default=None)) -> dict[str, object]:
+    def park(
+        body: ParkIn, request: Request, authorization: str | None = Header(default=None)
+    ) -> dict[str, object]:
+        log.info(
+            "park body fields %s (%s)",
+            sorted(body.model_fields_set),
+            request.headers.get("content-type", "no content-type"),
+        )
         if authorization:
             check(authorization, "header")
         else:

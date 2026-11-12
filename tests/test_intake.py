@@ -101,3 +101,11 @@ def test_token_in_body_instead_of_header(cfg, sched, db):
     assert c.post("/park", json={**BODY, "token": "wrong"}).status_code == 401
     r = c.post("/park", json={**BODY, "token": cfg.intake_token})
     assert r.status_code == 200 and r.json()["message"].startswith("Saved:")
+
+
+def test_body_keys_are_case_insensitive(cfg, sched, db):
+    c = make_client(cfg, sched, db)
+    body = {k.capitalize(): v for k, v in BODY.items()} | {"Token ": cfg.intake_token}
+    r = c.post("/park", json=body)
+    assert r.status_code == 200, r.text
+    assert c.get("/last", headers=auth(cfg)).json()["device"] == "driver1-iphone"
