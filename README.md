@@ -101,7 +101,7 @@ Menu names vary slightly between iOS versions. Do this on each driver's iPhone. 
 1. Open Shortcuts, tap **+**, name it `Log Parking Spot`.
 2. Add **Get Current Location**. Expand it and set Precision to **Best**.
 3. Add **Get Contents of URL**. URL: `https://<node>.<tailnet>.ts.net:8443/park`.
-4. Expand it. Method **POST**. Under Headers add `Authorization` = `Bearer <INTAKE_TOKEN>`.
+4. Expand it. Method **POST**. Under Headers add `Authorization` = `Bearer <INTAKE_TOKEN>`. (Alternatively skip Headers and add a Text field `token` = `<INTAKE_TOKEN>` to the JSON body below.)
 5. Request Body **JSON**, all fields as Text:
    - `lat`: Current Location → **Latitude**
    - `lon`: Current Location → **Longitude**
@@ -151,6 +151,7 @@ Tests never call the live sites; they use scrubbed fixtures in `tests/fixtures/`
 - **Status and logs:** `systemctl list-timers 'parking-checks-*'`, `journalctl -u 'parking-checks*' --since today`, `systemctl status parking-checks-intake`.
 - **Run history:** `sqlite3 /var/lib/parking-checks/state.db "select * from runs order by id desc limit 20"`.
 - **No alerts arrive:** `parking-checks notify-test`. Email relay: `unauthorized` means the script's `SECRET` differs from `.env`; `no allowed recipients` means `ALERT_EMAILS` is not in `ALLOWED_TO`; a non-JSON reply usually means the web app is not deployed with access "Anyone". Telegram: the chat must have messaged the bot first.
+- **"The network connection was lost" from Get Contents of URL:** Tailscale's HTTPS front end rejected a malformed header (logged by `tailscaled` as `http2: ... PROTOCOL_ERROR`), usually a header key with a stray space or colon. Retype the key, or drop the header and send `token` in the JSON body.
 - **Shortcut gets 401:** the `Authorization` header must be exactly `Bearer <token>`. 429 means more than 6 requests a minute.
 - **Shortcut cannot connect:** `tailscale funnel status` should list `:8443`; `curl http://127.0.0.1:8787/healthz` on the VM.
 - **"Site or format changed":** fetch the lookup by hand and compare with `tests/fixtures/`; update `tow/client.py` and the fixtures.

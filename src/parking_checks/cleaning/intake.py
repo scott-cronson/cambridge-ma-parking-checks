@@ -1,6 +1,7 @@
 """2A. HTTPS intake for parked locations (behind Tailscale Funnel on :8443).
 
-POST /park  Authorization: Bearer <INTAKE_TOKEN>, JSON {lat, lon, street, city, device, captured_at}
+POST /park  Authorization: Bearer <INTAKE_TOKEN> (or "token" in the JSON),
+            JSON {lat, lon, street, city, device, captured_at}
 GET  /last  same token; newest stored row, for testing
 GET  /healthz  no token; "ok"
 """
@@ -42,6 +43,8 @@ class ParkIn(BaseModel):
     city: str | None = Field(default=None, max_length=100)
     device: str = Field(default="unknown", max_length=60)
     captured_at: str | None = Field(default=None, max_length=60)
+    # Alternative to the Authorization header, for Shortcuts that cannot send one cleanly.
+    token: str | None = Field(default=None, max_length=200, repr=False)
 
 
 class RateLimiter:
@@ -146,7 +149,7 @@ def create_app(
     bad_limiter = RateLimiter(BAD_AUTH_LIMIT, RATE_WINDOW_S)
     expected = f"Bearer {cfg.intake_token}".encode()
 
-    def guard(authorization: str | None = Header(default=None)) -> None:
+    def check(authorization: str | None) -> None:
         if not authorization or not hmac.compare_digest(authorization.encode(), expected):
             if not bad_limiter.allow():
                 raise HTTPException(429, "rate limited")
@@ -154,12 +157,16 @@ def create_app(
         if not limiter.allow():
             raise HTTPException(429, "rate limited")
 
+    def guard(authorization: str | None = Header(default=None)) -> None:
+        check(authorization)
+
     @app.get("/healthz")
     def healthz() -> dict[str, str]:
         return {"status": "ok"}
 
-    @app.post("/park", dependencies=[Depends(guard)])
-    def park(body: ParkIn) -> dict[str, object]:
+    @app.post("/park")
+    def park(body: ParkIn, authorization: str | None = Header(default=None)) -> dict[str, object]:
+        check(authorization or (f"Bearer {body.token.strip()}" if body.token else None))
         lat = _coord(body.lat, -90, 90, "lat")
         lon = _coord(body.lon, -180, 180, "lon")
         if (lat is None) != (lon is None) or (lat == 0 and lon == 0):

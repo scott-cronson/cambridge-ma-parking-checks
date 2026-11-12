@@ -94,3 +94,10 @@ def test_bad_body_explains_itself(cfg, sched, db):
     c = make_client(cfg, sched, db)
     r = c.post("/park", content=b"not json", headers={**auth(cfg), "Content-Type": "application/json"})
     assert r.status_code == 422 and r.json()["message"].startswith("Not saved:")
+
+
+def test_token_in_body_instead_of_header(cfg, sched, db):
+    c = make_client(cfg, sched, db)
+    assert c.post("/park", json={**BODY, "token": "wrong"}).status_code == 401
+    r = c.post("/park", json={**BODY, "token": cfg.intake_token})
+    assert r.status_code == 200 and r.json()["message"].startswith("Saved:")
