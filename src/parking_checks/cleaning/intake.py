@@ -149,8 +149,34 @@ def create_app(
     bad_limiter = RateLimiter(BAD_AUTH_LIMIT, RATE_WINDOW_S)
     expected = f"Bearer {cfg.intake_token}".encode()
 
-    def check(authorization: str | None) -> None:
+    def describe_mismatch(got: str | None, where: str) -> str:
+        # Shape of a bad token, for troubleshooting a Shortcut. Never logs the token itself.
+        if not got:
+            return f"no token ({where})"
+        want = expected.decode()
+        if not got.startswith("Bearer "):
+            shape = "missing 'Bearer ' prefix"
+            got_tok = got
+        else:
+            got_tok = got[len("Bearer ") :]
+            shape = "wrong token"
+        tok = cfg.intake_token
+        notes = [f"len {len(got_tok)} vs {len(tok)}"]
+        if not got_tok.isascii():
+            notes.append("contains non-ASCII characters (smart punctuation?)")
+        if got_tok.strip() != got_tok:
+            notes.append("leading/trailing whitespace")
+        if got_tok.lower() == tok.lower() and got_tok != tok:
+            notes.append("differs only in letter case")
+        elif tok.startswith(got_tok):
+            notes.append("truncated copy of the token")
+        elif got == want:
+            notes = []
+        return f"{shape} ({where}): " + ", ".join(notes)
+
+    def check(authorization: str | None, where: str = "header") -> None:
         if not authorization or not hmac.compare_digest(authorization.encode(), expected):
+            log.warning("auth failed: %s", describe_mismatch(authorization, where))
             if not bad_limiter.allow():
                 raise HTTPException(429, "rate limited")
             raise HTTPException(401, "unauthorized")
@@ -166,7 +192,10 @@ def create_app(
 
     @app.post("/park")
     def park(body: ParkIn, authorization: str | None = Header(default=None)) -> dict[str, object]:
-        check(authorization or (f"Bearer {body.token.strip()}" if body.token else None))
+        if authorization:
+            check(authorization, "header")
+        else:
+            check(f"Bearer {body.token.strip()}" if body.token else None, "body")
         lat = _coord(body.lat, -90, 90, "lat")
         lon = _coord(body.lon, -180, 180, "lon")
         if (lat is None) != (lon is None) or (lat == 0 and lon == 0):
