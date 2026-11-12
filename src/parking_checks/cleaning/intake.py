@@ -38,7 +38,7 @@ BAD_AUTH_LIMIT = 20
 
 class ParkIn(BaseModel):
     # Keys are matched case-insensitively: the iPhone keyboard likes to capitalize them.
-    model_config = ConfigDict(extra="ignore")
+    model_config = ConfigDict(extra="allow")
 
     @model_validator(mode="before")
     @classmethod
@@ -205,8 +205,9 @@ def create_app(
         body: ParkIn, request: Request, authorization: str | None = Header(default=None)
     ) -> dict[str, object]:
         log.info(
-            "park body fields %s (%s)",
-            sorted(body.model_fields_set),
+            "park body fields %s, other keys %s (%s)",
+            sorted(body.model_fields_set - set(body.model_extra or {})),
+            [ascii(k) for k in sorted(body.model_extra or {})],
             request.headers.get("content-type", "no content-type"),
         )
         if authorization:
