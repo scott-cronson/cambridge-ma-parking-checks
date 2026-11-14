@@ -1,9 +1,8 @@
 [Unit]
-Description=parking-checks: search the tow lookup for the plate (7:30 am and 7:30 pm ET)
+Description=parking-checks: search the tow lookup for the plate (hourly at :30 ET)
 
 [Timer]
-OnCalendar=*-*-* 07:30:00 America/New_York
-OnCalendar=*-*-* 19:30:00 America/New_York
+OnCalendar=*-*-* *:30:00 America/New_York
 Persistent=true
 RandomizedDelaySec=60
 Unit=parking-checks@tow-plate.service

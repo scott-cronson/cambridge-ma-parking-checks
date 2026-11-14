@@ -20,6 +20,8 @@ from .plate_check import store
 
 SWEEP = "tow-sweep"
 SWEEP_INTERVAL_HOURS = 3
+# Delays beyond this are treated as late (backdated) data entry rather than posting lag.
+LATE_ENTRY_HOURS = 24
 
 
 def run_sweep(cfg: Config, client: TowClient, state: State, now: datetime) -> Outcome:
@@ -72,18 +74,22 @@ def latency_report(state: State) -> str:
             f"({baseline:%Y-%m-%d %H:%M}). Let tow-sweep run for a few days."
         )
     hours = sorted(d.total_seconds() / 3600 for d in delays)
-    median = statistics.median(hours)
-    worst = hours[-1]
+    prompt = [h for h in hours if h <= LATE_ENTRY_HOURS]
+    late = [h for h in hours if h > LATE_ENTRY_HOURS]
     lines = [
         f"Tows timed: {len(hours)} (first appeared after {baseline:%Y-%m-%d %H:%M})",
-        f"Median delay: {median:.1f} h",
-        f"90th percentile: {hours[int(0.9 * (len(hours) - 1))]:.1f} h",
-        f"Worst case: {worst:.1f} h",
         f"Resolution: up to {SWEEP_INTERVAL_HOURS} h (sweep interval), so true delays may be shorter.",
     ]
-    if worst > 12:
+    if prompt:
+        lines += [
+            f"Posted within {LATE_ENTRY_HOURS} h: {len(prompt)} of {len(hours)}"
+            f" (median {statistics.median(prompt):.1f} h, worst {prompt[-1]:.1f} h)",
+        ]
+    if late:
         lines.append(
-            "Worst case exceeds 12 h: the 12-hourly plate check alone cannot guarantee noticing a tow "
-            "within 12-24 h. A second tow signal is needed."
+            f"Late entries: {len(late)} of {len(hours)} listed {late[0]:.0f}-{late[-1]:.0f} h after "
+            "their tow time (backdated data entry; polling more often cannot catch these sooner)"
         )
+    if prompt and prompt[-1] > 12:
+        lines.append("Prompt postings can take over 12 h: consider a second tow signal.")
     return "\n".join(lines)

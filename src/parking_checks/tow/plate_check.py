@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 POLICE_PHONE = "617-349-3300"
 # From the lookup page's FAQ (Nov 2026). Only the city contract company is listed here.
 COMPANY_PHONES = {"B&B": "617-492-5781 (B&B Tow, 50 Mooney St, Cambridge)"}
-REMINDER_SLACK = timedelta(minutes=30)  # timers fire ~12h apart; allow a little jitter
+REMINDER_SLACK = timedelta(minutes=30)  # allow timer jitter around TOW_REMINDER_HOURS
 
 
 def store(state: State, rec: TowRecord, now: datetime, by: str) -> bool:
