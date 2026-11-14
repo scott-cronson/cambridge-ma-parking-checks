@@ -68,26 +68,31 @@ def test_unrecognised_page():
 
 
 class FakeResponse:
-    def __init__(self, status: int, text: str):
+    def __init__(self, status: int, text: str, location: str | None = None):
         self.status_code = status
         self.text = text
+        self.headers = {"Location": location} if location else {}
 
 
 class FakeSession:
-    def __init__(self, posts: list[FakeResponse]):
+    def __init__(self, posts: list[FakeResponse], pages: dict[str, FakeResponse] | None = None):
         self.headers: dict[str, str] = {}
         self.posts = posts
+        self.pages = pages or {}
         self.calls: list[tuple[str, dict | None]] = []
 
     def request(self, method, url, timeout=None, data=None, **kw):
-        self.calls.append((method, data))
+        self.calls.append((method, data if method == "POST" else url))
         if method == "GET":
+            for suffix, resp in self.pages.items():
+                if url.endswith(suffix):
+                    return resp
             return FakeResponse(200, fixture_text("tow_form.html"))
         return self.posts.pop(0)
 
 
-def client_with(posts):
-    fake = FakeSession(posts)
+def client_with(posts, pages=None):
+    fake = FakeSession(posts, pages)
     http = PoliteSession("test-agent", session=fake, sleep=lambda s: None)
     return TowClient(http), fake
 
@@ -110,3 +115,24 @@ def test_http_error_raises_with_status():
     with pytest.raises(SiteFormatError) as ei:
         client.search_make("CHRYSLER")
     assert ei.value.status == 500
+
+
+DETAIL_URL = "https://www.cambridgema.gov/departments/emergencycommunications/towedvehicles?plate="
+
+
+def test_single_result_redirect_is_followed():
+    detail = FakeResponse(200, fixture_text("tow_detail.html"))
+    client, fake = client_with(
+        [FakeResponse(302, "", location=DETAIL_URL + "MA_TST003")], pages={"plate=MA_TST003": detail}
+    )
+    res = client.search_make("MASE")
+    assert res.kind == "detail" and res.records[0].plate == "TST003"
+    assert fake.calls[-1] == ("GET", DETAIL_URL + "MA_TST003")
+
+
+@pytest.mark.parametrize("key", ["_", "MA_", "MA_%20"])
+def test_unplated_single_result_is_not_an_error(key):
+    client, fake = client_with([FakeResponse(302, "", location=DETAIL_URL + key)])
+    res = client.search_make("CHRYSLER")
+    assert res.kind == "unplated" and res.records == []
+    assert not any(m == "GET" and "plate=" in str(u) for m, u in fake.calls)

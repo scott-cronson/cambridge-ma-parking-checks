@@ -15,7 +15,7 @@ All checks accept `--dry-run` (print alerts, change nothing: it works on an in-m
 
 | Command | Schedule (America/New_York) | Purpose |
 | --- | --- | --- |
-| `parking-checks tow-plate` | Hourly at :30 | Search the lookup for the plate (2 requests) |
+| `parking-checks tow-plate` | 7:30 am and 7:30 pm | Search the lookup for the plate |
 | `parking-checks tow-freshness` | Wednesdays 7:00 am (`FRESHNESS_ON_CALENDAR`) | Confirm the lookup is live and current |
 | `parking-checks cleaning-nightly` | 9:00 pm | Compare the last parked spot with the schedule |
 | `parking-checks serve-intake` | always on | Receive locations from the Shortcut |
@@ -132,7 +132,7 @@ Known limits: Bluetooth must be on; the trigger can fire a few seconds late; a f
 
 **Freshness.** Makes are searched most-towed first (Honda, Toyota, Ford, Nissan, Subaru, Hyundai, Chevrolet, "Not Available", then the rest), stopping at the first tow under `FRESHNESS_MAX_AGE_HOURS`. Isolated HTTP errors are tolerated; an unparseable page, an unreachable site, or more failures than successes is reported as "site or format changed", separately from "data may be stale". Capped at 200 requests.
 
-**Latency log.** Every parsed tow is saved with `first_seen_at`. Because the freshness check is weekly, `tow-sweep` samples all makes every 3 h for the first `LATENCY_SAMPLE_DAYS`, then stops itself. `tow-latency` reports delays for tows that first appeared after the first sampling run. It separates prompt postings from late entries (listed days after their tow time), which more frequent polling cannot catch any sooner. In November 2026, 19 of 24 tows appeared within about 3 h of their tow time; that sampling is why the plate check runs hourly.
+**Latency log.** Every parsed tow is saved with `first_seen_at`. Because the freshness check is weekly, `tow-sweep` samples all makes every 3 h for the first `LATENCY_SAMPLE_DAYS`, then stops itself. `tow-latency` reports delays for tows that first appeared after the first sampling run. It separates prompt postings from late entries (listed days after their tow time), which more frequent polling cannot catch any sooner. In November 2026, 19 of 24 tows appeared within about 3 h of their tow time.
 
 **Cleaning schedule.** `data/street_cleaning.json` (schema 4: adds `street_aliases`, corrects `meta.fine`, keeps the coverage point in `.env`). The matcher splits the house number, expands abbreviations, applies aliases, takes **both** sides of the street, and picks segments by number (inside a range: that segment; in a gap or past the ends: every adjacent segment; no number: all). Null schedules flag `schedule_unknown`. Dates come from the city calendar (Recollect, unofficial, `after`=today, `before`=today+3), which includes holiday moves; a plain rule date the calendar does not list is still alerted, labelled. If the calendar fails, nth-weekday rules are used (April to December), confirmed relocations from the file are applied, unconfirmed holiday conflicts are flagged, and alerts say "computed from rule, not confirmed".
 

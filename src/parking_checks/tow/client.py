@@ -18,7 +18,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from urllib.parse import urljoin
+from urllib.parse import parse_qs, unquote, urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -79,7 +79,9 @@ class TowRecord:
 
 @dataclass
 class SearchResult:
-    kind: str  # "table" | "detail" | "none"
+    # "table" | "detail" | "none" | "unplated" (a single tow whose record has no plate; the
+    # city's detail page cannot display it, so nothing about it is readable)
+    kind: str
     records: list[TowRecord]
     models: list[str]
 
@@ -205,7 +207,15 @@ class TowClient:
         for k, v in controls.items():
             fields[P + k] = v
         fields[P + "btnSearchTowLog"] = "Search"
-        r = self.http.post(self.url, data=fields)
+        r = self.http.post(self.url, data=fields, allow_redirects=False)
+        if r.status_code in (301, 302, 303, 307):
+            # A single match redirects to its detail page, ?plate=<STATE>_<PLATE>. Records with
+            # no plate redirect to "?plate=_" or "?plate=MA_", which the city's site cannot render.
+            location = urljoin(self.url, (getattr(r, "headers", None) or {}).get("Location", ""))
+            key = unquote(parse_qs(urlparse(location).query).get("plate", [""])[0])
+            if not key.partition("_")[2].strip():
+                return SearchResult("unplated", [], [])
+            r = self.http.get(location)
         if r.status_code != 200:
             raise SiteFormatError(f"POST search {controls}: HTTP {r.status_code}", status=r.status_code)
         return parse_results(r.text, self._makes, self.url)
